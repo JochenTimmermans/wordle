@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  get 'game/index', as: 'index'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  get '/', to: 'game#index', as: 'index'
+  get '/play', to: 'game#new_game', as: 'new_game'
+  get '/play/:uuid', to: 'game#play', as: 'play'
 
-  # Defines the root path route ("/")
   root "game#index"
 end
