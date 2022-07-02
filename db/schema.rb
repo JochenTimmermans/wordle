@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_02_091502) do
+ActiveRecord::Schema[7.0].define(version: 2022_07_02_190856) do
   create_table "games", force: :cascade do |t|
     t.string "uuid"
     t.integer "word_id"
@@ -19,10 +19,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_02_091502) do
     t.index ["word_id"], name: "index_games_on_word_id"
   end
 
+  create_table "guesses", force: :cascade do |t|
+    t.integer "game_id", null: false
+    t.string "attempt"
+    t.string "feedback"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_guesses_on_game_id"
+  end
+
   create_table "words", force: :cascade do |t|
     t.string "word"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "guesses", "games"
 end

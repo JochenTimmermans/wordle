@@ -1,0 +1,27 @@
+<h1>Wordle</h1>
+
+<h2>Guesses</h2>
+
+<div id="word-field">
+  <% @game.guesses.each do |guess| %>
+    <% @game.judge(guess).each do |letter| %>
+      <% status_class = case letter[:status]
+      when Guess::STATUSES[:correct]
+        'correct'
+      when Guess::STATUSES[:out_of_place]
+        'out-of-place'
+      when Guess::STATUSES[:incorrect]
+        'incorrect'
+      end %>
+      <div id="letter" class="status-<%= status_class %>">
+        <%= letter %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<%= form_with url: "/play/#{@game.uuid}", method: :post do |form| %>
+  <%= form.label :guess, "Your next guess:" %>
+  <%= form.text_field :guess %>
+  <%= form.submit "Guess" %>
+<% end %>
