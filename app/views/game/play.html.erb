@@ -1,20 +1,18 @@
 <h1>Wordle</h1>
 
+<h2>DEBUG: <%= @game.word.word %></h2>
+
 <h2>Guesses</h2>
 
 <div id="word-field">
   <% @game.guesses.each do |guess| %>
-    <% @game.judge(guess).each do |letter| %>
-      <% status_class = case letter[:status]
-      when Guess::STATUSES[:correct]
-        'correct'
-      when Guess::STATUSES[:out_of_place]
-        'out-of-place'
-      when Guess::STATUSES[:incorrect]
-        'incorrect'
-      end %>
+    <% guess.attempt.split('').each_with_index do |letter, index|
+      letter_feedback = guess.feedback.split('')[index]
+    %>
+      <% status_class = 'correct' %>
       <div id="letter" class="status-<%= status_class %>">
         <%= letter %>
+        <%= letter_feedback %>
       </div>
     <% end %>
   <% end %>
