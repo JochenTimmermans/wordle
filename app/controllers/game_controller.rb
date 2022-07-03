@@ -13,7 +13,15 @@ class GameController < ApplicationController
 
   def guess
     game = Game.find_by_uuid(params[:uuid])
-    game.add_guess(params[:guess])
+    guess = params[:guess]
+
+    guess_validation = GuessService::validate_guess(guess)
+    if guess_validation[:status] == 'success'
+      game.add_guess(guess)
+    else
+      flash[:error] = guess_validation[:message]
+    end
+
     redirect_to action: 'play', uuid: game.uuid
   end
 end

@@ -1,11 +1,15 @@
-<div class="row">
+<div class="row mt-3">
   <h1 class="text-center">Wordle</h1>
 </div>
 
-<h2 class="row text-center">DEBUG: <%= @game.word.word %></h2>
+<% if flash[:error] %>
+  <div id="flash-message" class="col-6 offset-3 alert alert-danger">
+    Error: <%= flash[:error] %>
+  </div>
+<% end %>
 
-<div class="col-8 offset-2">
-  <div id="word-field" class="row px-5">
+<div class="col-6 offset-3">
+  <div id="word-field" class="row gx-2">
     <% @game.guesses.each do |guess| %>
       <div class="col-1"></div>
         <% guess.attempt.split('').each_with_index do |letter, index|
@@ -16,7 +20,7 @@
             when '2' then 'bg-warning text-black'
             end
         %>
-        <div id="letter-wrap" class="col-2 p-3">
+        <div id="letter-wrap" class="col-2 py-1">
           <div id="letter" class="<%= background_color %>">
             <%= letter %>
           </div>
@@ -34,15 +38,15 @@
     </div>
   <% else %>
     <div id="game-over">
-      Game Over!
+      Game Over! The answer was: <b><%= @game.word.word %></b>
     </div>
   <% end %>
   <div class="text-center pt-3">
     <a href="<%= new_game_url %>" class="btn btn-primary">Play again!</a>
   </div>
 <% else %>
-  <div id="guesses-left">
-    You have <%= @game.guesses_left %> guesses left.
+  <div id="guesses-left" class="col-6 offset-3 text-end">
+    You have <%= @game.guesses_left %> guess<% if @game.guesses_left > 1 %>es<%end %> left.
   </div>
 
   <div id="guess-form" class="row">
@@ -55,13 +59,14 @@
     </div>
   </div>
 <% end %>
+
 <style>
   #word-field {
       padding: 20px 0;
   }
   #letter {
-      font-size: 64px;
-      height: 100px;
+      font-size: 40px;
+      height: 70px;
       text-align: center;
       vertical-align: middle;
   }

@@ -43,6 +43,24 @@ RSpec.describe "Game requests", :type => :request do
       follow_redirect!
       expect(response).to render_template :play
     end
+
+    it 'redirects back to play with an error message after an guess of invalid size was posted' do
+      game = GameService::new_game
+      post "/play/#{game.uuid}", :params => { :guess => "wron" }
+      expect(response).to redirect_to "/play/#{game.uuid}"
+      follow_redirect!
+      expect(response).to render_template :play
+      expect(response.body).to include 'Error: invalid size'
+    end
+
+    it 'redirects back to play with an error message after a guess was posted that is not present in the word list' do
+      game = GameService::new_game
+      post "/play/#{game.uuid}", :params => { :guess => "wrong" }
+      expect(response).to redirect_to "/play/#{game.uuid}"
+      follow_redirect!
+      expect(response).to render_template :play
+      expect(response.body).to include 'Error: word not in word list'
+    end
   end
 
 end
