@@ -1,0 +1,74 @@
+<div class="row">
+  <h1 class="text-center">Wordle</h1>
+</div>
+
+<h2 class="row text-center">DEBUG: <%= @game.word.word %></h2>
+
+<div class="col-8 offset-2">
+  <div id="word-field" class="row px-5">
+    <% @game.guesses.each do |guess| %>
+      <div class="col-1"></div>
+        <% guess.attempt.split('').each_with_index do |letter, index|
+          letter_feedback = guess.feedback.split('')[index]
+          background_color = case letter_feedback
+            when '0' then 'bg-secondary text--white'
+            when '1' then 'bg-success text-white'
+            when '2' then 'bg-warning text-black'
+            end
+        %>
+        <div id="letter-wrap" class="col-2 p-3">
+          <div id="letter" class="<%= background_color %>">
+            <%= letter %>
+          </div>
+        </div>
+      <% end %>
+      <div class="col-1"></div>
+    <% end %>
+  </div>
+</div>
+
+<% if @game.ended? %>
+  <% if @game.won? %>
+    <div id="winner">
+      You won!!
+    </div>
+  <% else %>
+    <div id="game-over">
+      Game Over!
+    </div>
+  <% end %>
+  <div class="text-center pt-3">
+    <a href="<%= new_game_url %>" class="btn btn-primary">Play again!</a>
+  </div>
+<% else %>
+  <div id="guesses-left">
+    You have <%= @game.guesses_left %> guesses left.
+  </div>
+
+  <div id="guess-form" class="row">
+    <div class="col-6 offset-3">
+      <%= form_with url: "/play/#{@game.uuid}", method: :post, html: { autocomplete: 'off' } do |form| %>
+        <%= form.label :guess, "Your next guess:", class: 'form-label' %>
+        <%= form.text_field :guess, class: 'form-control', placeholder: 'Make your next guess', autofocus: true %>
+        <%= form.submit "Guess", class: 'btn btn-primary mt-2' %>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+<style>
+  #word-field {
+      padding: 20px 0;
+  }
+  #letter {
+      font-size: 64px;
+      height: 100px;
+      text-align: center;
+      vertical-align: middle;
+  }
+  #guess-form {
+      margin: 30px 20px 0 20px
+  }
+  #winner, #game-over {
+      text-align: center;
+  }
+</style>
